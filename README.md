@@ -2,7 +2,7 @@
 
 ## Description
 
-This weather dashboard shows the current weather conditions and five-day forecast of the city entered in the search box.
+This weather dashboard shows the current weather conditions and five-day forecast of the city entered in the search box. Weather details such as temperature, wind speed, humidity, and UV Index are shown.
 
 The application is done using HTML, CSS, and JavaScript powered by third-party API's such as Bootstrap, Moment.js, and OpenWeather One Call.
 

@@ -65,7 +65,7 @@ function displayCurrentWeather(resultObj, cityName) {
     if (!currentWeatherEl.hasChildNodes()) {
         //first time doing a search
         var resultCard = document.createElement('div');
-        resultCard.classList.add('card', 'bg-light', 'text-dark', 'm-3', 'p-3');   
+        resultCard.classList.add('card', 'bg-light', 'text-dark', 'm-3', 'p-3', 'col-sm-11');   
     
         var resultBody = document.createElement('div');
         resultBody.classList.add('card-body','current-weather-body');
@@ -76,7 +76,7 @@ function displayCurrentWeather(resultObj, cityName) {
     
         var bodyContentEl = document.createElement('p');
         var uvIndex = checkUVI(resultObj.uvi);
-        bodyContentEl.innerHTML = '<strong> Temp: </strong>' + resultObj.temp + ' °C <br><strong> Humidity: </strong>' + resultObj.humidity + '% <br><strong> Wind <i class="wi wi-owm-957"></i>:</strong> ' + resultObj.wind_speed + ' m/s <br><strong> UV Index:</strong> ' + uvIndex    
+        bodyContentEl.innerHTML = '<strong> Temp: </strong>' + resultObj.temp + '°C <br><strong> Humidity: </strong>' + resultObj.humidity + '% <br><strong> Wind <i class="wi wi-owm-957"></i>:</strong> ' + resultObj.wind_speed + ' m/s <br><strong> UV Index:</strong> ' + uvIndex    
         
         resultBody.append(titleEl, bodyContentEl);
         currentWeatherEl.append(resultCard);
@@ -108,13 +108,13 @@ function displayForecast(resultObj, iCount) {
         }
     
         var resultCard = document.createElement('div');
-        resultCard.classList.add('card', 'bg-light', 'text-dark', 'ml-3', 'p-2');   
+        resultCard.classList.add('card', 'bg-light', 'text-dark', 'ml-3', 'mb-3', 'p-2', 'col-sm-11', 'col-md-5', 'col-lg-2', 'col-11');   
     
         var resultBody = document.createElement('div');
-        resultBody.classList.add('card-body','forecast'+iCount);
+        resultBody.classList.add('card-body', 'p-lg-2', 'forecast'+iCount);
         resultCard.append(resultBody);
     
-        var titleEl = document.createElement('h2');
+        var titleEl = document.createElement('h3');
         titleEl.classList.add('text-center');
         titleEl.innerHTML = '<strong>' + moment(resultObj.dt, "X").format("D MMM YYYY") + '</strong><br><i class="wi wi-owm-' + resultObj.weather[0].id + '"></i>';
     

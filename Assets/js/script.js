@@ -10,28 +10,39 @@ function getAPI(cityName) {
     // the first one is getting the latitude and longitude of the city
     var apiGeoCoding = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&limit=5&appid=" + APIkey;
     var i = 0;
+    var cityNameSplit = ''
 
     fetch(apiGeoCoding).then(function (response) {
-        if (!response.ok) {
-            throw response.json();
+        if (!response.ok || !response) {
+            if (!response) alert('Invalid City');
+            return;
         }
         return response.json();
     })
         .then(function (locationData) {
-            if (locationData.length > 0) {
+            if (locationData) {
                 // GeoCoding API returns a max of 5 locations from the cityName provided so to get the index to use, compare the whole name of the output to the one entered
                 while (i < locationData.length) {
+                    //if country code is entered, split the value and just use the first part to look for the approriate array to use in the next part
+                    cityNameSplit = cityName.split(',');
+                    cityName = (cityNameSplit.length > 1) ? cityNameSplit[0] : cityName;
                     if (locationData[i].name.toUpperCase() === cityName.toUpperCase()) {
                         break;
                     }
                     i++;
                 }
-                // get the city name in proper case
-                cityName = locationData[i].name;
-                // the second one is the actual call to get the current and forecast weather of the city
-                // this is due to OneCall only accepting latitude and longitude values in its API call
-                var apiWeatherUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + locationData[i].lat + "&lon=" + locationData[i].lon + "&exclude=minutely,hourly,alerts&units=metric&appid=" + APIkey;
-                getWeather(apiWeatherUrl, cityName);
+                if (i < locationData.length) {
+                    // get the city name in proper case so just copy the name and country code from the chosen array.
+                    cityName = locationData[i].name+', '+locationData[i].country;
+                    // the second one is the actual call to get the current and forecast weather of the city
+                    // this is due to OneCall only accepting latitude and longitude values in its API call
+                    var apiWeatherUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + locationData[i].lat + "&lon=" + locationData[i].lon + "&exclude=minutely,hourly,alerts&units=metric&appid=" + APIkey;
+                    getWeather(apiWeatherUrl, cityName);
+                } else {
+                    // city entered does not match any of the returned data
+                    alert('Invalid city');
+                    return;
+                }
             } else {
                 alert('Invalid city');
                 return;
@@ -47,7 +58,7 @@ function getWeather(api, cityName) {
                 console.log(weatherData);
                 // display current weather
                 displayCurrentWeather(weatherData.current, cityName);
-                // display 5-day forecast
+                // use daily[1] to daily[6] from the API response to show the 5-day forecast
                 for (var i = 1; i < 6; i++){      
                     displayForecast(weatherData.daily[i],i);   
                 }
@@ -136,16 +147,17 @@ function displayForecast(resultObj, iCount) {
 }
 
 function checkUVI(uvI) {
-    // creates a button with a background of either green, yellow, or red based on the UV Index
+    // creates a disabled button with a background of either green, yellow, or red based on the UV Index
     var uvIndex = '';
 
     if (uvI < 3) {
-        uvIndex = '<button type="button" class="btn disabled btn-success btn-sm">'+uvI+'</button>'
+        uvIndex = '<button type="button" class="btn disabled btn-success btn-sm">' + uvI + '</button>';            
     } else if (uvI < 6) {
-        uvIndex = '<button type="button" class="btn disabled btn-warning btn-sm">'+uvI+'</button>'
+        uvIndex = '<button type="button" class="btn disabled btn-warning btn-sm">' + uvI + '</button>';
     } else {
-        uvIndex = '<button type="button" class="btn disabled btn-danger btn-sm">'+uvI+'</button>'
+        uvIndex = '<button type="button" class="btn disabled btn-danger btn-sm">' + uvI + '</button>';
     }
+
     return uvIndex;
 }
 
@@ -172,7 +184,7 @@ function createHistoryButton(cityName, api) {
         }
     }
 
-    //if not in localStorage or localStorage is empty
+    //if city is not in localStorage or localStorage is empty, create a button for that city
     if (!presentCity || !city) {
         var cityBtn = document.createElement('button');
         cityBtn.classList.add('btn', 'btn-primary', 'btn-block');
@@ -182,10 +194,12 @@ function createHistoryButton(cityName, api) {
         cityArr.push(newCity);
     }
 
+    // store object cityArr in localStorage
     localStorage.setItem("storedCity", JSON.stringify(cityArr));
 }
 
 function loadButtons() {
+    // Create a button for every key pair value stored in localStorage
     var cityArr = JSON.parse(localStorage.getItem("storedCity"));
     var cityBtn = '';
 
@@ -202,6 +216,7 @@ function loadButtons() {
 }
 
 function searchBtnClickHandler(event) {
+    // event handler for the buttons created
     var element = event.target;
 
     if (element.matches("button")) {
@@ -215,6 +230,7 @@ function searchBtnClickHandler(event) {
 }
 
 function formSubmitHandler(event) {
+    // event handler when enter is pressed for submitting the form
     event.preventDefault();
 
     var cityName = cityInputEl.value;

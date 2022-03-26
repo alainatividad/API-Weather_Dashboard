@@ -119,7 +119,7 @@ function displayForecast(resultObj, iCount) {
         }
     
         var resultCard = document.createElement('div');
-        resultCard.classList.add('card', 'bg-light', 'text-dark', 'ml-3', 'mb-3', 'p-2', 'col-sm-11', 'col-md-5', 'col-lg-2', 'col-11');   
+        resultCard.classList.add('card', 'bg-light', 'text-dark', 'ml-3', 'mb-3', 'p-2', 'col-sm-11', 'col-md-5', 'col-lg-3', 'col-11');   
     
         var resultBody = document.createElement('div');
         resultBody.classList.add('card-body', 'p-lg-2', 'forecast'+iCount);

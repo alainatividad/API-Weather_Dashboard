@@ -74,7 +74,7 @@ function getWeather(api, cityName) {
 
 function displayCurrentWeather(resultObj, cityName) {
     if (!currentWeatherEl.hasChildNodes()) {
-        //first time doing a search
+        //first time doing a search so create cards for the weather
         var resultCard = document.createElement('div');
         resultCard.classList.add('card', 'bg-light', 'text-dark', 'm-3', 'p-3', 'col-sm-11');   
     
